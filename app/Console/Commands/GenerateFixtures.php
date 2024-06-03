@@ -39,6 +39,11 @@ class GenerateFixtures extends Command
             ]);
         }
 
-        $this->info("$animalsNum animals have been generated.");
+        if ($animalsNum == 1) {
+            $this->info("$animalsNum animal has been generated.");
+        }
+        else {
+            $this->info("$animalsNum animals have been generated.");
+        }
     }
 }
