@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('animals', function (Blueprint $table) {
+        Schema::create('links', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 255);
-            $table->text('description')->nullable();
-            $table->integer('weight')->unsigned();
-            $table->dateTime('created_at');
-            $table->foreignId('category_id')->constrained()->onDelete('restrict');
+            $table->string("url", 255)->unique();
+            $table->string("internal_id", 7)->unique();
+            $table->dateTime("created_at");
+            $table->dateTime("publish_at");
+            $table->dateTime("delete_at");
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('animals');
+        Schema::dropIfExists('links');
     }
 };
