@@ -30,6 +30,8 @@ class LinkController extends Controller
         $link->created_at = Carbon::now();
         $link->publish_at = $date1;
         $link->delete_at = $date2;
-        $link->internal_id = $link->makeInternalId();
+        $link->internal_id = $link->getInternalId();
+
+        dd($link->internal_id);
     }
 }
