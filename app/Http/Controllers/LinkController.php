@@ -10,18 +10,14 @@ use Carbon\Carbon;
 
 class LinkController extends Controller
 {
-    public function index()
-    {
-        //
-    }
-
     public function create()
     {
-        //
+        return view("Links.create");
     }
 
-    public function store()//StoreLinkRequest $request)
+    public function store(StoreLinkRequest $request)
     {
+        return back()->with(["success" => "Successfully added a new link."]);
         $date1 = Carbon::create(2024, 2,10);
         $date2 = Carbon::create(2024, 5,10);
 

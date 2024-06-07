@@ -2,16 +2,15 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Link;
+use App\Rules\AfterPublish;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreLinkRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +21,9 @@ class StoreLinkRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "url" => "required|unique:links,url",
+            "publishAt" => "required|date",
+            "deleteAt" => "required|date|after:publishAt"
         ];
     }
 }
