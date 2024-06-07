@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Link;
 use App\Rules\AfterPublish;
 use Illuminate\Foundation\Http\FormRequest;
 

@@ -44,20 +44,46 @@
                                 </div>
                             </div>
                             <div class="col-2 mt-2">
-                                <input type="submit" value="Create Link" class="rounded bg-none btn-outline-success"/>
+                                <input type="submit" value="Create Link" class="rounded bg-success border-0 text-light"/>
                             </div>
                             @if(session("success"))
                                 <div class="col-12 mt-2">
                                         <p class="text-success fw-bold">{{ session("success") }}</p>
                                 </div>
                             @endif
+                            @if(session("error"))
+                                <div class="col-12 mt-2">
+                                    <p class="text-danger fw-bold">{{ session("error") }}</p>
+                                </div>
+                            @endif
                         </div>
                     </div>
-
-
                 </form>
             </div>
         </div>
+
+        @if(!empty($links))
+            <div class="row d-flex justify-content-center mt-5">
+                <div class="col-6 bg-light">
+                    <table class="w-100 table">
+                        <thead>
+                            <tr>
+                                <th>Url</th>
+                                <th>Internal Id</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($links as $link)
+                                <tr>
+                                    <td>{{ $link->url }}</td>
+                                    <td><a href="http://localhost:8000/{{ $link->url }}" target="_blank">{{ $link->internal_id }}</a></td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @endif
     </div>
 </body>
 </html>
