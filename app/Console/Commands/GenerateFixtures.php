@@ -6,6 +6,9 @@ use App\Models\Animal;
 use App\Models\Category;
 use Illuminate\Console\Command;
 use Faker\Factory as Faker;
+use Illuminate\Database\Eloquent\Factories\Sequence;
+use function Webmozart\Assert\Tests\StaticAnalysis\inArray;
+use function Webmozart\Assert\Tests\StaticAnalysis\length;
 
 class GenerateFixtures extends Command
 {
@@ -17,30 +20,37 @@ class GenerateFixtures extends Command
     {
         $animalsNum = $this->option('animals-num');
         $truncate = $this->option('truncate');
+        $categoriesNum = 3;
+
+        if ($animalsNum <= '0' || $animalsNum > '100') {
+            $this->error("'animals-num' option must have a value greater than 0 and less than or equal to 100.");
+            return 1;
+        }
+        if (!empty($truncate) && ($truncate !== '1' && $truncate !== '0')) {
+            $this->error("'truncate' option must have a value of 0 or 1.");
+            return 1;
+        }
 
         if ($truncate) {
             Animal::truncate();
+            $this->info("Animals table truncated.");
         }
 
-        // Create 3 categories
-        $categories = [];
-        for ($i = 0; $i < 3; $i++) {
-            $categories[] = Category::create(['name' => 'Category ' . ($i + 1)]);
+        Category::factory()->count($categoriesNum)->create();
+
+        $allCategoryIds = Category::pluck("id")->toArray();
+        if (count($allCategoryIds) <= 0) {
+            $this->warn("There are no available categories to reference in animals.");
+            return 1;
         }
 
-        $faker = Faker::create();
-        for ($i = 0; $i < $animalsNum; $i++) {
-            Animal::create([
-                'name' => $faker->word,
-                'description' => $faker->text(1000),
-                'weight' => $faker->numberBetween(1, 10000),
-                'created_at' => $faker->dateTime,
-                'category_id' => $categories[array_rand($categories)]->id,
-            ]);
-        }
+        Animal::factory()
+                ->count($animalsNum)
+                ->sequence(fn (Sequence $sequence) => ['category_id' => $allCategoryIds[array_rand($allCategoryIds)]])
+                ->create();
 
         if ($animalsNum == 1) {
-            $this->info("$animalsNum animal has been generated.");
+            $this->info("A lonely animal has been generated.");
         }
         else {
             $this->info("$animalsNum animals have been generated.");
